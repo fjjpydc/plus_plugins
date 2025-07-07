@@ -26,7 +26,7 @@ class DeviceInfoPlusPlugin : FlutterPlugin {
         val activityManager: ActivityManager =
             context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val contentResolver = context.contentResolver
-        val handler = MethodCallHandlerImpl(packageManager, activityManager, contentResolver)
+        val handler = MethodCallHandlerImpl(packageManager, activityManager, contentResolver,context)
         methodChannel.setMethodCallHandler(handler)
     }
 }

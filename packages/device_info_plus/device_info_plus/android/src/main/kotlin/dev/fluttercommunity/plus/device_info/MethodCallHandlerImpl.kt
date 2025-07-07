@@ -12,6 +12,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import kotlin.collections.HashMap
 import android.os.StatFs
 import android.os.Environment
+import android.content.Context
 
 /**
  * The implementation of [MethodChannel.MethodCallHandler] for the plugin. Responsible for
@@ -21,6 +22,7 @@ internal class MethodCallHandlerImpl(
     private val packageManager: PackageManager,
     private val activityManager: ActivityManager,
     private val contentResolver: ContentResolver,
+    private val context: Context,
 ) : MethodCallHandler {
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -35,7 +37,7 @@ internal class MethodCallHandlerImpl(
             build["fingerprint"] = Build.FINGERPRINT
             build["hardware"] = Build.HARDWARE
             build["host"] = Build.HOST
-            build["id"] = Build.ID
+            build["id"] = getAndroidID(context) //Build.ID
             build["manufacturer"] = Build.MANUFACTURER
             build["model"] = Build.MODEL
             build["product"] = Build.PRODUCT
@@ -97,7 +99,9 @@ internal class MethodCallHandlerImpl(
             result.notImplemented()
         }
     }
-
+    fun getAndroidID(context:Context):String{
+        return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+    }
     private fun getSystemFeatures(): List<String> {
         val featureInfos: Array<FeatureInfo> = packageManager.systemAvailableFeatures
         return featureInfos
